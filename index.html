@@ -20,11 +20,15 @@
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            overflow: hidden;
+            position: relative;
         }
 
         .container {
             text-align: center;
             max-width: 800px;
+            z-index: 10;
+            position: relative;
         }
 
         .ascii-art {
@@ -38,6 +42,44 @@
             color: #0f0;
             margin-bottom: 30px;
             font-size: 24px;
+        }
+
+        /* Background ornaments */
+        .bg-ornament {
+            position: absolute;
+            font-size: 10px;
+            line-height: 1.2;
+            white-space: pre;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .float {
+            animation: float 6s infinite ease-in-out;
+        }
+
+        .float-reverse {
+            animation: float 8s infinite ease-in-out reverse;
+        }
+
+        .slide-right {
+            animation: slideRight 15s infinite linear;
+        }
+
+        .slide-left {
+            animation: slideLeft 18s infinite linear;
+        }
+
+        .spin {
+            animation: spin 4s infinite linear;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        .rain {
+            animation: rain 8s infinite linear;
         }
 
         .fade {
@@ -67,9 +109,100 @@
             0%, 50% { opacity: 1; }
             51%, 100% { opacity: 0; }
         }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-30px); }
+        }
+
+        @keyframes slideRight {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(calc(100vw + 100%)); }
+        }
+
+        @keyframes slideLeft {
+            0% { transform: translateX(100vw); }
+            100% { transform: translateX(-100%); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.1); }
+        }
+
+        @keyframes rain {
+            0% { transform: translateY(-100px); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
     </style>
 </head>
 <body>
+    <!-- Background ornaments -->
+    <div class="bg-ornament float" style="top: 10%; left: 5%;">
+    *
+   ***
+  *****
+ *******
+*********
+ *******
+  *****
+   ***
+    *
+    </div>
+
+    <div class="bg-ornament pulse" style="top: 15%; right: 10%;">
+ ______
+/      \
+|  <>  |
+\______/
+    </div>
+
+    <div class="bg-ornament float-reverse" style="bottom: 20%; left: 8%;">
+  +-+
+  |o|
+  +-+
+  |||
+ /|||\
+    </div>
+
+    <div class="bg-ornament spin" style="top: 50%; right: 5%;">
+   |
+  -+-
+   |
+    </div>
+
+    <div class="bg-ornament pulse" style="bottom: 10%; right: 15%;">
+ /\
+/  \
+\  /
+ \/
+    </div>
+
+    <div class="bg-ornament slide-right" style="top: 30%;">
+>>> *** >>> *** >>>
+    </div>
+
+    <div class="bg-ornament slide-left" style="top: 70%;">
+<<< ### <<< ### <<<
+    </div>
+
+    <div class="bg-ornament float" style="top: 40%; left: 3%;">
+  @@@
+ @@@@@
+@@@@@@@
+ @@@@@
+  @@@
+    </div>
+
+    <div id="rain-container"></div>
+
     <div class="container">
         <h1>ASCII ART ANIMATION DEMO</h1>
 
@@ -163,6 +296,95 @@
         }
 
         typeText();
+
+        // Create rain effect
+        const rainContainer = document.getElementById('rain-container');
+        const rainChars = ['|', '!', ':', '.', '*', '+', '#'];
+
+        function createRainDrop() {
+            const drop = document.createElement('div');
+            drop.className = 'bg-ornament rain';
+            drop.textContent = rainChars[Math.floor(Math.random() * rainChars.length)];
+            drop.style.left = Math.random() * 100 + '%';
+            drop.style.animationDuration = (Math.random() * 4 + 4) + 's';
+            drop.style.animationDelay = Math.random() * 2 + 's';
+            rainContainer.appendChild(drop);
+
+            // Remove after animation
+            setTimeout(() => {
+                drop.remove();
+            }, 10000);
+        }
+
+        // Create rain drops periodically
+        setInterval(createRainDrop, 500);
+
+        // Animated pattern cycler
+        const patterns = [
+            `
+   .-.
+  (o.o)
+   > ^
+            `,
+            `
+   -*-
+  -*- -*
+   -*-
+            `,
+            `
+  {***}
+ {*****}
+  {***}
+            `,
+            `
+  [===]
+  |   |
+  [===]
+            `
+        ];
+
+        let patternIndex = 0;
+        const patternElements = [];
+
+        // Create some cycling pattern ornaments
+        for (let i = 0; i < 3; i++) {
+            const ornament = document.createElement('div');
+            ornament.className = 'bg-ornament fade';
+            ornament.style.top = (20 + i * 25) + '%';
+            ornament.style.right = (2 + i * 3) + '%';
+            document.body.insertBefore(ornament, document.querySelector('.container'));
+            patternElements.push(ornament);
+        }
+
+        function cyclePatterns() {
+            patternElements.forEach((el, i) => {
+                const idx = (patternIndex + i) % patterns.length;
+                el.textContent = patterns[idx];
+            });
+            patternIndex = (patternIndex + 1) % patterns.length;
+        }
+
+        setInterval(cyclePatterns, 3000);
+        cyclePatterns();
+
+        // Create floating stars
+        const stars = ['*', '+', '.', '°', '•'];
+        function createStar() {
+            const star = document.createElement('div');
+            star.className = 'bg-ornament';
+            star.style.animation = 'float ' + (4 + Math.random() * 4) + 's infinite ease-in-out';
+            star.textContent = stars[Math.floor(Math.random() * stars.length)];
+            star.style.top = Math.random() * 100 + '%';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.fontSize = (8 + Math.random() * 8) + 'px';
+            star.style.animationDelay = Math.random() * 2 + 's';
+            document.body.insertBefore(star, document.querySelector('.container'));
+        }
+
+        // Create multiple stars
+        for (let i = 0; i < 15; i++) {
+            createStar();
+        }
     </script>
 </body>
 </html>
