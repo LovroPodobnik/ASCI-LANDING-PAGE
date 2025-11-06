@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASCII Art Animation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 800px;
+        }
+
+        .ascii-art {
+            font-size: 12px;
+            line-height: 1.2;
+            white-space: pre;
+            margin: 20px 0;
+        }
+
+        h1 {
+            color: #0f0;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .fade {
+            animation: fadeInOut 2s infinite;
+        }
+
+        .wave {
+            animation: wave 1.5s infinite;
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes wave {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ASCII ART ANIMATION DEMO</h1>
+
+        <div class="ascii-art fade" id="art1">
+    _____
+   /     \
+  | () () |
+   \  ^  /
+    |||||
+    |||||
+        </div>
+
+        <div class="ascii-art blink" id="art2">
+   ___
+  /   \
+ |  o  |
+  \___/
+   |||
+        </div>
+
+        <div class="ascii-art wave" id="art3">
+  /\_/\
+ ( o.o )
+  > ^ <
+ /|   |\
+(_|   |_)
+        </div>
+
+        <div class="ascii-art" id="rotating">
+|
+        </div>
+    </div>
+
+    <script>
+        // Rotating animation for ASCII frames
+        const frames = [
+            `
+  |
+ /|\\
+ / \\
+            `,
+            `
+ \\|
+  |\\
+ / \\
+            `,
+            `
+ \\|/
+  |
+ / \\
+            `,
+            `
+ \\|/
+  |
+  |
+            `,
+            `
+ \\|/
+  |
+ _|_
+            `,
+            `
+  |/
+ /|
+ / \\
+            `
+        ];
+
+        let currentFrame = 0;
+        const rotatingDiv = document.getElementById('rotating');
+
+        function animate() {
+            rotatingDiv.textContent = frames[currentFrame];
+            currentFrame = (currentFrame + 1) % frames.length;
+        }
+
+        setInterval(animate, 200);
+
+        // Typing effect for title
+        const title = document.querySelector('h1');
+        const originalText = title.textContent;
+        title.textContent = '';
+        let charIndex = 0;
+
+        function typeText() {
+            if (charIndex < originalText.length) {
+                title.textContent += originalText[charIndex];
+                charIndex++;
+                setTimeout(typeText, 100);
+            }
+        }
+
+        typeText();
+    </script>
+</body>
+</html>
